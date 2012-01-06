@@ -88,7 +88,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  rails (= 3.0.11)
+  rails
   rspec
   rspec-rails
   sqlite3
