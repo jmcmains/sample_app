@@ -48,6 +48,6 @@ SampleApp::Application.configure do
   config.active_support.deprecation = :notify
   
   require 'rack/ssl'
-  config.middleware.insert_before ActionDispatch::Cookies, Rack::SSL
   config.middleware.use Rack::SSL
+  config.middleware.insert_before ActionDispatch::Cookies, Rack::SSL
 end
