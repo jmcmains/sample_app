@@ -33,7 +33,7 @@ describe UsersController do
       response.should have_selector("h1>img", :class => "gravatar")
     end
     
-    it "should havethe right URL" do
+    it "should have the right URL" do
       get :show, :id => @user
       response.should have_selector("td>a", :content => user_path(@user),
                                             :href    => user_path(@user))
@@ -117,6 +117,11 @@ describe UsersController do
       it "should have a welcome message" do
         post :create, :user => @attr
         flash[:success].should =~ /welcome to the sample app /i
+      end
+      
+      it "should sign the user in" do
+        post :create, :user => @attr
+        controller.should be_signed_in
       end
     end
   end
