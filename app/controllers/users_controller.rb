@@ -45,9 +45,8 @@ class UsersController < ApplicationController
   end
   
   def destroy
-    User.find(params[:id]).destroy
-    flash[:success] = "User destroyed."
-    redirect_to users_path
+    @user.destroy
+    redirect_to users_path, :flash => {:success => "User destroyed."}
   end
   
   private
@@ -62,7 +61,7 @@ class UsersController < ApplicationController
     end
     
     def admin_user
-      user = User.find(params[:id])
-      redirect_to(root_path) if !current_user.admin? || current_user?(user)
+      @user = User.find(params[:id])
+      redirect_to(root_path) if !current_user.admin? || current_user?(@user)
     end
 end

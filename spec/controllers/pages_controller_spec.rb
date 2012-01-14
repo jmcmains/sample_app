@@ -4,7 +4,8 @@ describe PagesController do
   render_views
   
   before(:each) do
-  @base_title = "Ruby on Rails Tutorial Sample App"
+    @base_title = "Ruby on Rails Tutorial Sample App"
+  end
   
   describe "GET 'home'" do
     it "should be successful" do
@@ -21,6 +22,7 @@ describe PagesController do
     it "should have a non-blank body" do
       get 'home'
       response.body.should_not =~ /<body>\s*<\/body>/
+    end
   end
   
   describe "GET 'contact'" do

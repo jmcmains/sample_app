@@ -1,5 +1,17 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                 :integer         not null, primary key
+#  name               :string(255)
+#  email              :string(255)
+#  created_at         :datetime
+#  updated_at         :datetime
+#  encrypted_password :string(255)
+#  salt               :string(255)
+#  admin              :boolean         default(FALSE)
+#
 require 'spec_helper'
-
 describe User do
 
   before(:each) do
@@ -15,18 +27,18 @@ describe User do
     User.create!(@attr)
   end
   
-  it "should require a name"
+  it "should require a name" do
     no_name_user = User.new(@attr.merge(:name => ""))
     no_name_user.should_not be_valid
   end
   
-    it "should reject names that are too long"
+  it "should reject names that are too long" do
     long_name = "a" * 51
     long_name_user = User.new(@attr.merge(:name => long_name))
     no_name_user.should_not be_valid
   end
   
-  it "should require an email"
+  it "should require an email" do
     no_email_user = User.new(@attr.merge(:email => ""))
     no_email_user.should_not be_valid
   end
@@ -113,41 +125,48 @@ describe User do
     it "should have a salt" do
       @user.should respond_to(:salt)
     end
+  
     describe "has_password? method" do
       it "should exist" do
-        @user.should respond_to(:has_password?)
+      @user.should respond_to(:has_password?)
       end
       
       it "should be true if the passwords match" do
-        @user.has_password?(@attr[:password]).should be_true
+      @user.has_password?(@attr[:password]).should be_true
       end
       
       it "should be false if the passwords don't match" do
-        @user.has_password?("invalid").should be_false
+      @user.has_password?("invalid").should be_false
       end
     end
-    
+  
     describe "authenicate method" do
       it "should exist" do
         User.should respond_to(:authenticate)
       end
       
       it "should return nil on email/password mismatch" do
-        User.authenticate(@attr[:email]), "wrongpass").should be_nil
+        wrong_password_user = User.authenticate(@attr[:email],"wrongpass")
+        wrong_password_user.should be_nil
+        #User.authenticate(@attr[:email]),"wrongpass").should be_nil
       end
       
       it "should return nil for an email address with no user" do
-        User.authenticate("bar@foo.com", @attr[:password]).should be_nil
+        nonexistent_user = User.authenticate("bar@foo.com",@attr[:password])
+        nonexistent_user.should be_nil
+        #User.authenticate("bar@foo.com",@attr[:password]).should be_nil
       end
       
       it "should return the user on email/password match" do
-        User.authenticate(@attr[:email], @attr[:password]).should == @user
+        matching_user=User.authenticate(@attr[:email], @attr[:password])
+        matching_user.should == @user
+        #User.authenticate(@attr[:email], @attr[:password]).should == @user
       end     
     end
   end
   
   describe "admin attribute" do
-    
+  
     before (:each) do
       @user = User.create!(@attr)
     end
@@ -165,4 +184,44 @@ describe User do
       @user.should be_admin
     end
   end
+  
+  describe "micropost associations" do
+    
+    before (:each) do
+      @user = User.create(@attr)
+      @mp1 = Factory(:micropost, :user => @user, :created_at => 1.day.ago)
+      @mp2 = Factory(:micropost, :user => @user, :created_at => 1.hour.ago)
+    end
+    
+    it "should have a microposts attribute" do
+      @user.should respond_to(:microposts)
+    end
+    
+    it "should have the right microposts in the right order" do
+      @user.microposts.should == [@mp2, @mp1]
+    end
+    
+    it "should destroy associated microposts" do
+      @user.destroy
+      [@mp1, @mp2].each do |micropost|
+        Micropost.find_by_id(micropost.id).should be_nil
+      end
+    end
+  end
 end
+
+
+# == Schema Information
+#
+# Table name: users
+#
+#  id                 :integer         not null, primary key
+#  name               :string(255)
+#  email              :string(255)
+#  created_at         :datetime
+#  updated_at         :datetime
+#  encrypted_password :string(255)
+#  salt               :string(255)
+#  admin              :boolean         default(FALSE)
+#
+
