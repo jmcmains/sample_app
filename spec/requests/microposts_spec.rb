@@ -21,13 +21,15 @@ describe "Microposts" do
     end
     
     describe "success" do
-      content = "Lorem ipsum dolor sit amet"
-      lambda do
-        visit root_path
-        fill_in :micropost_content, :with => content
-        click_button
-        response.should have_selector('span.content', :content => content)
-      end.should change(Micropost, :count).by(1)
+      it "should make a new micropost" do
+        content = "Lorem ipsum dolor sit amet"
+        lambda do
+          visit root_path
+          fill_in :micropost_content, :with => content
+          click_button
+          response.should have_selector('span.content', :content => content)
+        end.should change(Micropost, :count).by(1)
+      end
     end
   end
 end
