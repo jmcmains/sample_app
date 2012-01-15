@@ -212,7 +212,7 @@ table.microposts tr {
 table.microposts tr td.gravatar {
 	border-top: 1px solid #ccc;
 	vertical-align: top;
-	padding-top: 50px;
+	width: 50px;
 }
 
 table.microposts tr td.micropost {
